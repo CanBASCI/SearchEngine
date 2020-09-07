@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>SearchEngine.Builder</AssemblyName>
-    <RootNamespace>SearchEngine.Builder</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
