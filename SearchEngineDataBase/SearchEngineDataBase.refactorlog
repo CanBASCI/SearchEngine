@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="315a0af4-99f6-4b88-b196-b2bc84e35920" ChangeDateTime="09/07/2020 16:33:07">
+    <Property Name="ElementName" Value="[dbo].[ItemTable].[IX_ItemTable_Column]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_ItemTable_Id]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a4bcf718-2f49-436f-a844-22bb605dab8e" ChangeDateTime="09/07/2020 16:33:51">
+    <Property Name="ElementName" Value="[dbo].[ItemTable].[IX_ItemTable_Item_IsActive]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_ItemTable_Title_IsActive]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="960a705c-a55d-4d15-ba70-fa017fcce090" ChangeDateTime="09/07/2020 16:48:46">
+    <Property Name="ElementName" Value="[dbo].[ItemTable].[Title]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Product" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="cf33e601-375e-414f-9055-fab8149a64b0" ChangeDateTime="09/07/2020 16:48:59">
+    <Property Name="ElementName" Value="[dbo].[ItemTable].[IX_ItemTable_Title_IsActive]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_ItemTable_Product_IsActive]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9e082a84-6c64-4276-a5ca-dec080e86f08" ChangeDateTime="09/07/2020 16:49:25">
+    <Property Name="ElementName" Value="[dbo].[ItemTable].[Category]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProductType" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="92301238-687c-4730-b0e7-0db7ff305082" ChangeDateTime="09/07/2020 16:49:32">
+    <Property Name="ElementName" Value="[dbo].[ItemTable].[IX_ItemTable_Category_IsActive]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_ItemTable_ProductType_IsActive]" />
+  </Operation>
+</Operations>
