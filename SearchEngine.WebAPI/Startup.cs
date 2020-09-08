@@ -20,6 +20,10 @@ namespace SearchEngine.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,7 +36,7 @@ namespace SearchEngine.WebAPI
 
             app.UseHttpsRedirection();
 
-            //app.UseHsts();
+            app.UseCors("AllowAllOrigins");
 
             app.UseRouting();
 

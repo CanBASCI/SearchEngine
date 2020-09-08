@@ -16,10 +16,12 @@ namespace SearchEngine.Business.Impl
     public class ProductService : IProductService
     {
         private readonly IProductDataAccess productDataAccess;
+        private readonly IProductTypePriorityDataAccess productTypePriorityDataAccess;
 
-        public ProductService(IProductDataAccess productDataAccess)
+        public ProductService(IProductDataAccess productDataAccess, IProductTypePriorityDataAccess productTypePriorityDataAccess)
         {
             this.productDataAccess = productDataAccess;
+            this.productTypePriorityDataAccess = productTypePriorityDataAccess;
         }
 
         public IDataResult<Product> GetById(int Id)
@@ -64,11 +66,10 @@ namespace SearchEngine.Business.Impl
             try
             {
                 var productList = productDataAccess.GetList().ToList();
-                var productListByText = Algorithm.GetProductListByText(text, productList);
-                var productListByIndex = Algorithm.GetProductListByIndex(text, productListByText);
-                //var productListLength = Algorithm.GetProductListByLength(text, productListByIndex);
-
-                return new SuccessDataResult<List<Product>>(productListByText);
+                var productTypePriorityList = productTypePriorityDataAccess.GetList().ToList();
+                var orderedProductList = Algorithm.GetProductListByText(text, productList, productTypePriorityList);
+                
+                return new SuccessDataResult<List<Product>>(orderedProductList);
 
             }
             catch (Exception ex)

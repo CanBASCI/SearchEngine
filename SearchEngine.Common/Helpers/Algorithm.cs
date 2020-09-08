@@ -1,55 +1,113 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using SearchEngine.Entities.Dto;
 using System.Collections.Generic;
+using SearchEngine.Common.Dto;
 
 namespace SearchEngine.Common.Helpers
 {
     public class Algorithm
     {
-        private const string Space = " ";
-        public static List<Product> GetProductListByText(string text, List<Product> products)
+        public static List<Product> GetProductListByText(string text, List<Product> products, List<ProductTypePriority> productTypePriorityList)
         {
-            //var textList = text.Split(Space);
-            //var searchTextList = new string[textList.Length];
+            List<Product> outputProductList = new List<Product>();
+            string[] searchKeyList = GetSearchKeyList(text);
 
-            //for (int i = textList.Length; i > 0; i--)
-            //{
-            //    searchTextList[textList.Length - i] = text.Replace(textList[i], "");
-            //}
-
-            return products.Where(x => x.ProductName.Contains(text) && x.IsActive)
-                .OrderBy(y => y.ProductName).ToList();
-        }
-
-        public static Dictionary<Product, int> GetProductListByIndex(string text, List<Product> products)
-        {
-
-
-            Dictionary<Product, int> dictionary = new Dictionary<Product, int>();
-            foreach (var product in products)
+            for (int i = 0; i < searchKeyList.Length; i++)
             {
-                int index = product.ProductName.IndexOf(text);
-                dictionary.Add(product, index);
+                List<Product> allProductList = GetProductList(products, searchKeyList[i]);
+                Dictionary<Product, SortProperty> searchProductList = new Dictionary<Product, SortProperty>();
+
+                if (allProductList.Count == 0)
+                {
+                    continue;
+                }
+                searchProductList = SetProductListIndex(allProductList, searchKeyList[i]);
+
+                searchProductList = SetProductListLength(searchProductList);
+
+                searchProductList = SetProductListCategory(searchProductList, productTypePriorityList);
+
+                searchProductList = searchProductList.OrderByDescending(x => x.Value.CategoryPoint)
+                                                     .OrderBy(x => x.Value.Index)
+                                                     .OrderBy(x => x.Value.Length)
+                                                     .ToDictionary(x => x.Key, x => x.Value);
+
+                foreach (var searchProduct in searchProductList)
+                {
+                    products.Remove(searchProduct.Key);
+                    outputProductList.Add(searchProduct.Key);
+                }
             }
 
-            var productOrdered = dictionary.OrderBy(x => x.Value);
-
-            return productOrdered.ToDictionary(x => x.Key, y => y.Value);
+            return outputProductList;
         }
 
-        public static Dictionary<Product, int> GetProductListByLength(string text, List<Product> products)
+        private static string[] GetSearchKeyList(string searchKey)
         {
-            Dictionary<Product, int> dictionary = new Dictionary<Product, int>();
-            foreach (var product in products)
+            string[] searchKeyList = searchKey.Split(' ');
+            string[] criteriaList = new string[searchKeyList.Length + 1];
+
+            for (int i = searchKeyList.Length; i >= 0; i--)
             {
-                int length = product.ProductName.Length;
-                dictionary.Add(product, length);
+                if (i == 0) criteriaList[i] = searchKey;
+                else
+                {
+                    criteriaList[i] = searchKeyList[i - 1];
+                }
             }
 
-            var productOrdered = dictionary.OrderBy(x => x.Value);
+            return criteriaList;
+        }
 
-            return productOrdered.ToDictionary(x => x.Key, y => y.Value);
+        private static List<Product> GetProductList(List<Product> allProductList, string searchKey)
+        {
+            List<Product> searchProductList = new List<Product>();
+
+            if (allProductList.Count > 0)
+            {
+                searchProductList = allProductList.Where(x => x.ProductName.Contains(searchKey) && x.IsActive)
+                                                                .OrderBy(x => x.ProductName)
+                                                                .ToList();
+            }
+
+            return searchProductList;
+        }
+
+        private static Dictionary<Product, SortProperty> SetProductListIndex(List<Product> allProductList, string searchKey)
+        {
+            Dictionary<Product, SortProperty> productListWithIndex = new Dictionary<Product, SortProperty>();
+
+            foreach (var product in allProductList)
+            {
+                int index = product.ProductName.IndexOf(searchKey);
+                SortProperty sortProperty = new SortProperty()
+                {
+                    Index = index
+                };
+                productListWithIndex.Add(product, sortProperty);
+            }
+            return productListWithIndex;
+        }
+
+        private static Dictionary<Product, SortProperty> SetProductListLength(Dictionary<Product, SortProperty> allProductList)
+        {
+            foreach (var product in allProductList)
+            {
+                int totalChar = product.Key.ProductName.Length;
+                product.Value.Length = totalChar;
+            }
+            return allProductList;
+        }
+
+        private static Dictionary<Product, SortProperty> SetProductListCategory(Dictionary<Product, SortProperty> allProductList, List<ProductTypePriority> productTypePriorityList)
+        {
+            foreach (var product in allProductList)
+            {
+                ProductTypePriority productTypePriority = productTypePriorityList.Where(x => x.ProductType == product.Key.ProductType).FirstOrDefault();
+                product.Value.CategoryPoint = productTypePriority.Priority;
+            }
+
+            return allProductList;
         }
     }
 }
